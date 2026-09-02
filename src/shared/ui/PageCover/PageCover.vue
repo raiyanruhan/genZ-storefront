@@ -5,10 +5,12 @@
     :style="initialCover ? 'display: flex; transform: translateY(0);' : undefined"
     aria-hidden="true"
   >
-    <span
-      class="page-cover__label"
-      :class="{ 'is-visible': labelShown }"
-    >{{ label }}</span>
+    <img
+      src="/logo.png"
+      alt=""
+      class="page-cover__logo"
+      :class="{ 'is-visible': logoShown }"
+    >
   </div>
 </template>
 
@@ -16,11 +18,10 @@
 import { ref, onMounted } from 'vue'
 
 import { canAnimate } from '@/shared/lib/motion/canAnimate'
-import { registerCover, revealScreen, useCoverLabel, useLabelShown } from '@/shared/lib/motion/pageCover'
+import { registerCover, revealScreen, useLogoShown } from '@/shared/lib/motion/pageCover'
 
 const root = ref<HTMLElement | null>(null)
-const label = useCoverLabel()
-const labelShown = useLabelShown()
+const logoShown = useLogoShown()
 
 /** On desktop the slab is already covering the viewport on first paint. */
 const initialCover = ref(canAnimate())
@@ -33,9 +34,9 @@ onMounted(async () => {
 
   if (!initialCover.value) return
 
-  labelShown.value = true
+  logoShown.value = true
 
-  // Hold on the brand until fonts are ready (capped), then lift the slab.
+  // Hold on the logo until fonts are ready (capped), then lift the slab.
   const fontsReady = (document as Document & { fonts?: FontFaceSet }).fonts?.ready
   await Promise.race([fontsReady ?? Promise.resolve(), wait(1500)])
   await wait(400)
@@ -63,21 +64,20 @@ onMounted(async () => {
   transition: none !important;
 }
 
-.page-cover__label {
-  color: var(--color__white);
-  font-size: clamp(2rem, 6vw, 4rem);
-  font-weight: 700;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
+.page-cover__logo {
+  width: clamp(72px, 11vw, 148px);
+  height: auto;
+  /* logo art is solid black on transparent — invert to white on the dark slab */
+  filter: invert(1);
   opacity: 0;
-  transform: translateY(24px);
+  transform: translateY(20px) scale(0.96);
   transition:
-    opacity 0.3s ease,
-    transform 0.3s ease;
+    opacity 0.35s ease,
+    transform 0.35s ease;
 }
 
-.page-cover__label.is-visible {
+.page-cover__logo.is-visible {
   opacity: 1;
-  transform: translateY(0);
+  transform: translateY(0) scale(1);
 }
 </style>

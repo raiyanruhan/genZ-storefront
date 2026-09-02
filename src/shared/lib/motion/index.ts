@@ -1,10 +1,7 @@
 export { canAnimate } from './canAnimate'
-export { titleOf } from './routeTitle'
 export {
   registerCover,
-  setLabel,
-  useCoverLabel,
-  useLabelShown,
+  useLogoShown,
   setSkipCover,
   shouldSkipCover,
   coverScreen,

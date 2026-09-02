@@ -16,8 +16,7 @@ import { ref } from 'vue'
 const DURATION_MS = 500
 
 const coverEl = ref<HTMLElement | null>(null)
-const label = ref('ZENJI')
-const labelShown = ref(false)
+const logoShown = ref(false)
 
 /** Skip the cover for nested tab switches (e.g. personal-area profile <-> orders). */
 let skipCover = false
@@ -26,16 +25,8 @@ export function registerCover(el: HTMLElement): void {
   coverEl.value = el
 }
 
-export function setLabel(text: string): void {
-  label.value = text
-}
-
-export function useCoverLabel() {
-  return label
-}
-
-export function useLabelShown() {
-  return labelShown
+export function useLogoShown() {
+  return logoShown
 }
 
 export function setSkipCover(value: boolean): void {
@@ -79,7 +70,7 @@ export function coverScreen(): Promise<void> {
   // ...then wipe up into view.
   el.classList.remove('page-cover--instant')
   el.style.transform = 'translateY(0)'
-  labelShown.value = true
+  logoShown.value = true
 
   return afterTransform(el)
 }
@@ -89,7 +80,7 @@ export function revealScreen(): Promise<void> {
   const el = coverEl.value
   if (!el) return Promise.resolve()
 
-  labelShown.value = false
+  logoShown.value = false
   el.style.transform = 'translateY(-100%)'
 
   return afterTransform(el).then(() => {

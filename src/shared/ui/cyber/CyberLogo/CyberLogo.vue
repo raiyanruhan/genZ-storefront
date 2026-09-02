@@ -2,20 +2,17 @@
   <router-link
     to="/"
     class="cyber-logo"
+    aria-label="ZENJI — home"
   >
-    {{ APP_NAME }}
-    <span
-      class="cyber-logo__glitch abs-full"
-      aria-hidden="true"
+    <img
+      src="/logo.png"
+      alt="ZENJI"
+      class="cyber-logo__img"
     >
-      {{ APP_NAME }}
-    </span>
   </router-link>
 </template>
 
-<script setup lang="ts">
-import { APP_NAME } from '@/shared/config'
-</script>
+<script setup lang="ts"></script>
 
 <style lang="scss">
 @import 'styles';

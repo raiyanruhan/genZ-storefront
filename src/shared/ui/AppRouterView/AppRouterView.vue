@@ -19,8 +19,7 @@ import { computed } from 'vue'
 import { useRoute } from 'vue-router'
 
 import { canAnimate } from '@/shared/lib/motion/canAnimate'
-import { titleOf } from '@/shared/lib/motion/routeTitle'
-import { coverScreen, revealScreen, setLabel, shouldSkipCover } from '@/shared/lib/motion/pageCover'
+import { coverScreen, revealScreen, shouldSkipCover } from '@/shared/lib/motion/pageCover'
 
 const route = useRoute()
 
@@ -46,7 +45,6 @@ function settle(): Promise<void> {
 
 async function onLeave(_el: Element, done: () => void): Promise<void> {
   if (!canAnimate() || shouldSkipCover()) return done()
-  setLabel(titleOf(route))
   await coverScreen()
   done()
 }

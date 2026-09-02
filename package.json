@@ -1,7 +1,8 @@
 {
   "name": "zenji-web",
   "version": "1.0.0",
-  "author": "ZENJI",
+  "author": "Raiyan Bin Rashid",
+  "license": "AGPL-3.0-only",
   "private": true,
   "scripts": {
     "dev": "vite",

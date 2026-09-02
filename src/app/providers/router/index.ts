@@ -2,12 +2,22 @@ import { createRouter, createWebHistory } from 'vue-router'
 import type { RouteLocationNormalized } from 'vue-router'
 import { routes } from './routes'
 import { canAnimate, coverScreen, revealScreen, whenCovered } from '@/shared/lib/motion'
+import { bootstrapAuth } from '@/features/auth/model'
 
 export { pages as AppPages } from './pages'
 
 export const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes
+})
+
+/**
+ * Restore the signed-in session before any route guard runs. On a hard refresh
+ * of a protected page, this lets `beforeEnter` see the real auth state instead of
+ * bouncing the visitor to the homepage while the async restore is still pending.
+ */
+router.beforeEach(async () => {
+  await bootstrapAuth()
 })
 
 /**

@@ -27,15 +27,13 @@ import { TheHeader } from '@/widgets/TheHeader'
 import { PageCover } from '@/shared/ui/PageCover'
 import { MainLayout, EmptyLayout } from '@/shared/ui/layouts'
 import { TheBurgerMenu } from '@/shared/ui/TheBurgerMenu'
-import { TheAlerts, useAlertsStore } from '@/shared/ui/TheAlerts'
+import { TheAlerts } from '@/shared/ui/TheAlerts'
 import { ButtonScrollTop } from '@/shared/ui/buttons'
 
-import { computed, onBeforeMount, provide } from 'vue'
+import { computed, provide } from 'vue'
 import { useRoute } from 'vue-router'
 import { EAppProviders, AppRoutes, useAppStore } from './providers'
 import { AppPages } from './providers/router'
-import { AuthModel } from '@/features/auth'
-import { SessionModel, SessionApi } from '@/entities/Session'
 import { ProductCategories } from '@/entities/Product'
 
 provide(EAppProviders.AppRoutes, AppRoutes)
@@ -45,30 +43,4 @@ useAppStore()
 
 const route = useRoute()
 const isEmptyLayout = computed(() => route.meta.layout === 'empty')
-
-const session = SessionModel.useSessionStore()
-const auth = AuthModel.useAuth()
-
-const { showError } = useAlertsStore()
-
-onBeforeMount(() => {
-  if (!session.refreshToken) return
-  login()
-})
-
-async function login() {
-  try {
-    const { data } = await SessionApi.getToken(session.refreshToken)
-
-    session.setTokens({
-      idToken: data.id_token,
-      refreshToken: data.refresh_token
-    })
-
-    await auth.loadSessionUser(data.user_id)
-    await auth.loadStoresData()
-  } catch (e: any) {
-    showError(e.message)
-  }
-}
 </script>

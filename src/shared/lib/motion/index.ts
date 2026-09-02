@@ -4,6 +4,7 @@ export {
   registerCover,
   setLabel,
   useCoverLabel,
+  useLabelShown,
   setSkipCover,
   shouldSkipCover,
   coverScreen,

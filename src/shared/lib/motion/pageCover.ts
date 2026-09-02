@@ -1,21 +1,23 @@
 import { ref } from 'vue'
-import { gsap } from './gsap'
 
 /**
  * Full-screen cover slab controller (singleton).
  *
- * coverScreen()  -> slab wipes UP over the viewport, label fades in
- * revealScreen() -> slab wipes further UP off-screen, label fades out
+ * The slab is driven by CSS transitions on `transform` — the browser animates it
+ * on the compositor, so the wipe stays smooth even while the next page is doing
+ * heavy synchronous mount work (list render, swiper init, etc.) behind it.
+ * No per-frame JavaScript.
  *
- * The <PageCover> component registers its root element here on mount.
+ * coverScreen()  -> slab wipes UP from the bottom, covering the viewport
+ * revealScreen() -> slab wipes further UP, off the top, revealing the new page
  */
 
-const IN_DURATION = 0.6
-const OUT_DURATION = 0.6
-const EASE = 'expo.inOut'
+/** Must stay in sync with the `transition-duration` in PageCover.vue. */
+const DURATION_MS = 500
 
 const coverEl = ref<HTMLElement | null>(null)
 const label = ref('ZENJI')
+const labelShown = ref(false)
 
 /** Skip the cover for nested tab switches (e.g. personal-area profile <-> orders). */
 let skipCover = false
@@ -32,6 +34,10 @@ export function useCoverLabel() {
   return label
 }
 
+export function useLabelShown() {
+  return labelShown
+}
+
 export function setSkipCover(value: boolean): void {
   skipCover = value
 }
@@ -40,47 +46,53 @@ export function shouldSkipCover(): boolean {
   return skipCover
 }
 
-function labelNode(el: HTMLElement): Element | null {
-  return el.querySelector('.page-cover__label')
+function afterTransform(el: HTMLElement): Promise<void> {
+  return new Promise(resolve => {
+    let settled = false
+    const finish = () => {
+      if (settled) return
+      settled = true
+      el.removeEventListener('transitionend', onEnd)
+      resolve()
+    }
+    const onEnd = (e: TransitionEvent) => {
+      if (e.target === el && e.propertyName === 'transform') finish()
+    }
+    el.addEventListener('transitionend', onEnd)
+    // Safety net in case transitionend never fires (tab backgrounded, etc.)
+    setTimeout(finish, DURATION_MS + 100)
+  })
 }
 
 /** Slab covers the screen. Resolves once the viewport is fully hidden. */
 export function coverScreen(): Promise<void> {
-  return new Promise(resolve => {
-    const el = coverEl.value
-    if (!el) return resolve()
+  const el = coverEl.value
+  if (!el) return Promise.resolve()
 
-    gsap.killTweensOf([el, labelNode(el)])
+  el.style.display = 'flex'
 
-    gsap
-      .timeline({ onComplete: () => resolve() })
-      .set(el, { display: 'flex', pointerEvents: 'auto', yPercent: 100 })
-      .set(labelNode(el), { opacity: 0, y: 24 })
-      .to(el, { yPercent: 0, duration: IN_DURATION, ease: EASE })
-      .to(
-        labelNode(el),
-        { opacity: 1, y: 0, duration: 0.32, ease: 'power2.out' },
-        `-=${IN_DURATION * 0.45}`
-      )
-  })
+  // Snap below the viewport with no transition...
+  el.classList.add('page-cover--instant')
+  el.style.transform = 'translateY(100%)'
+  void el.offsetHeight // force reflow
+
+  // ...then wipe up into view.
+  el.classList.remove('page-cover--instant')
+  el.style.transform = 'translateY(0)'
+  labelShown.value = true
+
+  return afterTransform(el)
 }
 
 /** Slab slides off the top, revealing the freshly mounted page. */
 export function revealScreen(): Promise<void> {
-  return new Promise(resolve => {
-    const el = coverEl.value
-    if (!el) return resolve()
+  const el = coverEl.value
+  if (!el) return Promise.resolve()
 
-    gsap.killTweensOf([el, labelNode(el)])
+  labelShown.value = false
+  el.style.transform = 'translateY(-100%)'
 
-    gsap
-      .timeline({
-        onComplete: () => {
-          gsap.set(el, { display: 'none', pointerEvents: 'none' })
-          resolve()
-        }
-      })
-      .to(labelNode(el), { opacity: 0, y: -24, duration: 0.2, ease: 'power2.in' })
-      .to(el, { yPercent: -100, duration: OUT_DURATION, ease: EASE }, '-=0.04')
+  return afterTransform(el).then(() => {
+    el.style.display = 'none'
   })
 }

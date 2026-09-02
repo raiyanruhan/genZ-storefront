@@ -30,10 +30,19 @@ const route = useRoute()
  */
 const pageKey = computed(() => route.path)
 
-const twoFrames = () =>
-  new Promise<void>(resolve => {
-    requestAnimationFrame(() => requestAnimationFrame(() => resolve()))
+/** Two frames, then an idle slice — lets the new page finish mounting behind the cover. */
+function settle(): Promise<void> {
+  return new Promise(resolve => {
+    requestAnimationFrame(() =>
+      requestAnimationFrame(() => {
+        const ric = (window as Window & { requestIdleCallback?: typeof requestIdleCallback })
+          .requestIdleCallback
+        if (ric) ric(() => resolve(), { timeout: 450 })
+        else setTimeout(resolve, 200)
+      })
+    )
   })
+}
 
 async function onLeave(_el: Element, done: () => void): Promise<void> {
   if (!canAnimate() || shouldSkipCover()) return done()
@@ -45,7 +54,7 @@ async function onLeave(_el: Element, done: () => void): Promise<void> {
 async function onEnter(_el: Element, done: () => void): Promise<void> {
   if (!canAnimate() || shouldSkipCover()) return done()
   window.scrollTo(0, 0)
-  await twoFrames()
+  await settle()
   await revealScreen()
   done()
 }

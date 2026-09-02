@@ -5,7 +5,7 @@
     aria-label="ZENJI — home"
   >
     <img
-      src="/logo.png"
+      src="/logo-wide.png"
       alt="ZENJI"
       class="cyber-logo__img"
     >

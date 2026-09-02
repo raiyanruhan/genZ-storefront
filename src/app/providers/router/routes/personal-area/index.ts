@@ -10,6 +10,7 @@ export const routeName: string = 'PersonalAreaPage'
 export const route: RouteRecordRaw = {
   name: routeName,
   path: '/personal-area',
+  meta: { title: 'Account' },
   component: () => import('@/pages/personal-area'),
 
   children: [favoritesRoute, ordersRoute, profileRoute, walletRoute],

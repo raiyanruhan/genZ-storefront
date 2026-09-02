@@ -5,5 +5,6 @@ export const routeName = 'CartPage'
 export const route: RouteRecordRaw = {
   name: routeName,
   path: '/cart',
+  meta: { title: 'Cart' },
   component: () => import('@/pages/cart')
 }

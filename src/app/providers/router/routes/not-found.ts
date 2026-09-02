@@ -6,7 +6,8 @@ export const route: RouteRecordRaw = {
   path: '/:pathMatch(.*)*',
   name: routeName,
   meta: {
-    layout: 'empty'
+    layout: 'empty',
+    title: '404'
   },
   component: () => import('@/pages/not-found')
 }

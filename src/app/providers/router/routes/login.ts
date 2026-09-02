@@ -5,5 +5,6 @@ export const routeName: string = 'LoginPage'
 export const route: RouteRecordRaw = {
   name: routeName,
   path: '/login',
+  meta: { title: 'Login' },
   component: () => import('@/pages/login')
 }

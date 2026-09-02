@@ -1,8 +1,5 @@
 <template>
   <div class="container">
-    <h1 class="mb-xxs">ZENJI</h1>
-    <h3 class="mb-m">an anime-inspired streetwear brand</h3>
-
     <div class="column gap-l mb-l">
       <ProductList
         :products="currentPageProducts"
@@ -46,7 +43,7 @@ const { isLoading, startLoading, finishLoading } = useIsLoading()
 
 const allProducts = ref<ProductModel.IProduct[]>([])
 const page = ref(1)
-const limit = 30
+const limit = 32
 
 const filteredProducts = computed(() => {
   return allProducts.value

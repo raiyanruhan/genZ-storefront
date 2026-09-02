@@ -1,5 +1,4 @@
 export const APP_NAME = getEnvVar('VITE_APP_NAME')
-const APP_PROD_BASE_URL = getEnvVar('VITE_APP_PROD_BASE_URL')
 
 export const DJ_API_URL = getEnvVar('VITE_APP_DJ_API_URL')
 
@@ -15,7 +14,9 @@ export const REFRESH_TOKEN_KEY = 'refresh-token'
 export const isDevEnv = getEnvVar('DEV')
 export const isProdEnv = getEnvVar('PROD')
 
-export const BASE_URL = isProdEnv ? APP_PROD_BASE_URL : ''
+// Vite's own base (set via `--base`), without a trailing slash.
+// Deploys at domain root ("/") -> "". Sub-path deploys keep their prefix.
+export const BASE_URL = import.meta.env.BASE_URL.replace(/\/+$/, '')
 
 function getEnvVar(key: string) {
   const envVar = import.meta.env[key]

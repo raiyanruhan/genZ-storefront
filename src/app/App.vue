@@ -15,6 +15,8 @@
   <ButtonScrollTop />
 
   <TheAlerts />
+
+  <PageCover />
 </template>
 
 <script setup lang="ts">
@@ -22,6 +24,7 @@ import './styles/index.scss'
 
 import { TheHeader } from '@/widgets/TheHeader'
 
+import { PageCover } from '@/shared/ui/PageCover'
 import { MainLayout, EmptyLayout } from '@/shared/ui/layouts'
 import { TheBurgerMenu } from '@/shared/ui/TheBurgerMenu'
 import { TheAlerts, useAlertsStore } from '@/shared/ui/TheAlerts'

@@ -1,7 +1,11 @@
 .button-burger {
   --color: var(--color__red);
+  --ease: cubic-bezier(0.16, 1, 0.3, 1);
 
   border: 2px solid var(--color);
+  transition:
+    border-color 0.25s ease,
+    opacity 0.2s ease;
 
   &__line {
     position: absolute;
@@ -11,7 +15,9 @@
     width: calc(100% - 12px);
     height: 3px;
     background-color: var(--color);
-    transition: inherit;
+    transition:
+      width 0.3s var(--ease),
+      background-color 0.25s ease;
 
     &::before,
     &::after {
@@ -21,6 +27,10 @@
       width: 100%;
       height: inherit;
       background-color: inherit;
+      transition:
+        width 0.3s var(--ease),
+        top 0.3s var(--ease),
+        bottom 0.3s var(--ease);
     }
 
     &::before {
@@ -48,10 +58,10 @@
 
   &:focus-visible,
   &:hover {
-    --color: var(--color__blue);
+    opacity: 0.72;
   }
 
   &:active {
-    --color: var(--color__blue--dark);
+    opacity: 0.55;
   }
 }

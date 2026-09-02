@@ -1,18 +1,20 @@
 <template>
-  <div
-    v-if="store.isActive"
-    class="burger-menu"
-    @click.self="store.closeBurgerMenu"
-  >
-    <div class="burger-menu__content custom-scroll">
-      <ButtonCross
-        class="burger-menu__button-close"
-        @click="store.closeBurgerMenu"
-      />
+  <Transition name="burger">
+    <div
+      v-if="store.isActive"
+      class="burger-menu"
+      @click.self="store.closeBurgerMenu"
+    >
+      <div class="burger-menu__content custom-scroll">
+        <ButtonCross
+          class="burger-menu__button-close"
+          @click="store.closeBurgerMenu"
+        />
 
-      <slot />
+        <slot />
+      </div>
     </div>
-  </div>
+  </Transition>
 </template>
 
 <script setup lang="ts">

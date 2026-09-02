@@ -1,0 +1,61 @@
+.cyber-card {
+  --padding: 16px;
+
+  --cyber-card-clip-path: polygon(
+    var(--padding) 0,
+    100% 0,
+    100% 100%,
+    95% 100%,
+    95% calc(100% - 10px),
+    calc(95% - 25px) calc(100% - 10px),
+    calc(95% - 25px) 100%,
+    0 100%,
+    0 var(--padding)
+  );
+
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: -1;
+
+  &::before,
+  &::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 0;
+  }
+
+  &::before {
+    clip-path: var(--cyber-card-clip-path);
+    color: inherit;
+    background-color: currentColor;
+  }
+
+  &::after {
+    clip-path: polygon(
+      calc(var(--padding) + 1px) 2px,
+      calc(100% - 2px) 2px,
+      calc(100% - 2px) calc(100% - 2px),
+      calc(95% + 2px) calc(100% - 2px),
+      calc(95% + 2px) calc(100% - 12px),
+      calc(95% - 27px) calc(100% - 12px),
+      calc(95% - 27px) calc(100% - 2px),
+      2px calc(100% - 2px),
+      2px calc(var(--padding) + 1px)
+    );
+    background-color: var(--color__black);
+  }
+
+  &__tag {
+    position: absolute;
+    bottom: 0;
+    right: 5%;
+    font-size: 9px;
+  }
+}

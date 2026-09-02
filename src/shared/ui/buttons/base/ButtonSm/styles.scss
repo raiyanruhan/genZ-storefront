@@ -1,0 +1,28 @@
+.button-sm {
+  align-self: baseline;
+  color: var(--color__grey);
+
+  &__icon-wrap {
+    color: inherit;
+    transition-property: transform;
+    transition-duration: var(--transition-duration);
+    transition-timing-function: var(--transition-timing-function);
+  }
+
+  &__text {
+    transition-property: color;
+    transition-duration: var(--transition-duration);
+    transition-timing-function: var(--transition-timing-function);
+  }
+
+  &:focus-visible,
+  &:hover {
+    color: var(--color__red);
+  }
+
+  &:active {
+    .button-sm__icon-wrap {
+      transform: scale(0.9);
+    }
+  }
+}

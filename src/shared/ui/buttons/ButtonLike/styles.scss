@@ -1,0 +1,43 @@
+.button-like {
+  &.liked {
+    .button-sm__icon-wrap {
+      color: var(--color__red);
+
+      path {
+        fill: var(--color__red);
+      }
+    }
+  }
+
+  &:focus-visible,
+  &:hover {
+    animation: ease scale-pulse infinite 0.5s;
+
+    .button-sm__icon-wrap {
+      color: var(--color__grey);
+    }
+
+    &.liked {
+      .button-sm__icon-wrap {
+        color: var(--color__red);
+      }
+    }
+  }
+
+  &:active {
+    animation: initial;
+    transform: scale(0.8);
+  }
+}
+
+@keyframes scale-pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.2);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
